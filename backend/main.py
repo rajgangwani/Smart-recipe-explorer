@@ -2,10 +2,23 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Optional
+import os
 
 import models, schemas
 from database import engine, SessionLocal
 from services.ai_service import generate_recipe_suggestion
+
+
+# =========================
+# ENVIRONMENT CONFIG
+# =========================
+
+ENV = os.getenv("ENV", "development")
+
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "http://localhost:5500"  # fallback for local development
+)
 
 
 # =========================
@@ -16,13 +29,19 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Smart Recipe Explorer",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url=None if ENV == "production" else "/docs",
+    redoc_url=None if ENV == "production" else "/redoc"
 )
 
-# CORS Configuration
+
+# =========================
+# CORS CONFIGURATION (Production Safe)
+# =========================
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,7 +65,7 @@ def get_db():
 # =========================
 
 @app.post(
-    "/recipes",
+    "/api/v1/recipes",
     response_model=schemas.RecipeResponse,
     status_code=status.HTTP_201_CREATED
 )
@@ -66,7 +85,7 @@ def create_recipe(
 # =========================
 
 @app.get(
-    "/recipes",
+    "/api/v1/recipes",
     response_model=List[schemas.RecipeResponse]
 )
 def get_recipes(
@@ -80,33 +99,27 @@ def get_recipes(
 ):
     query = db.query(models.Recipe)
 
-    # 🔎 Smart search (name + ingredients)
     if search:
         query = query.filter(
             (models.Recipe.name.ilike(f"%{search}%")) |
             (models.Recipe.ingredients.ilike(f"%{search}%"))
         )
 
-    # 🏷 Category filter
     if category:
         query = query.filter(
             models.Recipe.category.ilike(f"%{category}%")
         )
 
-    # ⏱ Max cooking time filter
     if max_time:
         query = query.filter(
             models.Recipe.cooking_time <= max_time
         )
 
-    # ↕ Sorting
     if sort_by == "name":
         query = query.order_by(models.Recipe.name.asc())
-
     elif sort_by == "time":
         query = query.order_by(models.Recipe.cooking_time.asc())
 
-    # 📄 Pagination
     return query.offset(skip).limit(limit).all()
 
 
@@ -115,7 +128,7 @@ def get_recipes(
 # =========================
 
 @app.get(
-    "/recipes/{recipe_id}",
+    "/api/v1/recipes/{recipe_id}",
     response_model=schemas.RecipeResponse
 )
 def get_recipe(
@@ -140,7 +153,7 @@ def get_recipe(
 # =========================
 
 @app.put(
-    "/recipes/{recipe_id}",
+    "/api/v1/recipes/{recipe_id}",
     response_model=schemas.RecipeResponse
 )
 def update_recipe(
@@ -172,7 +185,7 @@ def update_recipe(
 # =========================
 
 @app.delete(
-    "/recipes/{recipe_id}",
+    "/api/v1/recipes/{recipe_id}",
     status_code=status.HTTP_204_NO_CONTENT
 )
 def delete_recipe(
@@ -200,7 +213,7 @@ def delete_recipe(
 # =========================
 
 @app.post(
-    "/ai/suggest",
+    "/api/v1/ai/suggest",
     response_model=schemas.AISuggestionResponse
 )
 def ai_suggest(
