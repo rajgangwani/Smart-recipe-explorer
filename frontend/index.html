@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Recipe Explorer</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="navbar">
+    <h1>🍲 Smart Recipe Explorer</h1>
+
+    <div class="top-search">
+        <input id="searchInput" placeholder="Search recipe name...">
+        <button class="primary-btn" onclick="searchRecipes()">Search</button>
+        <button class="secondary-btn" onclick="location.reload()">Refresh</button>
+    </div>
+</header>
+
+
+<!-- MAIN LAYOUT -->
+<div class="dashboard">
+
+    <!-- LEFT CONTENT -->
+    <div class="main-content">
+
+        <!-- ADD RECIPE (NOW ABOVE) -->
+        <div class="card">
+            <h2>Add Recipe</h2>
+
+            <div class="grid-2">
+                <input id="name" placeholder="Recipe Name">
+                <input id="category" placeholder="Category">
+            </div>
+
+            <textarea id="ingredients" placeholder="Ingredients"></textarea>
+            <textarea id="instructions" placeholder="Instructions"></textarea>
+
+            <input id="time" type="number" placeholder="Cooking Time (mins)">
+
+            <button class="primary-btn" onclick="addRecipe()">Add Recipe</button>
+        </div>
+
+
+        <!-- RECIPES SECTION -->
+        <div class="recipe-section card">
+            <div class="recipe-header">
+                <h2>Recipes</h2>
+                <p id="resultCount" class="result-count"></p>
+            </div>
+
+            <div id="recipeGrid" class="recipe-grid"></div>
+            <p id="emptyState" class="empty hidden">No recipes found.</p>
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT SIDEBAR AI CHAT -->
+    <div class="ai-sidebar">
+
+        <div class="ai-title">
+            🤖 AI Recipe Assistant
+        </div>
+
+        <div id="aiMessages" class="ai-messages"></div>
+
+        <div class="ai-input-area">
+            <input id="aiIngredients" placeholder="Ask using ingredients...">
+            <button onclick="generateAI()">Send</button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="toast" class="toast hidden"></div>
+
+
+<footer class="footer">
+    <div class="footer-inner">
+        <h3 class="footer-title">Smart Recipe Explorer</h3>
+
+        <p class="footer-text">
+            Created with <span class="heart">❤</span> by 
+            <strong>Raj Gangwani</strong>
+        </p>
+
+        <div class="footer-socials">
+            <a href="https://www.linkedin.com/in/raj-gangwani/" target="_blank" class="social-link">
+                <!-- LinkedIn -->
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4.98 3.5C4.98 4.88 3.87 6 2.49 6S0 4.88 0 3.5 1.11 1 2.49 1s2.49 1.12 2.49 2.5zM0 8h5v16H0V8zm7.5 0h4.8v2.3h.07c.67-1.2 2.3-2.47 4.73-2.47 5.06 0 6 3.33 6 7.66V24h-5v-7.7c0-1.84-.03-4.21-2.57-4.21-2.57 0-2.96 2-2.96 4.08V24h-5V8z"/>
+                </svg>
+            </a>
+
+            <a href="https://github.com/rajgangwani/" target="_blank" class="social-link">
+                <!-- GitHub -->
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.05c-3.34.73-4.03-1.61-4.03-1.61-.55-1.39-1.35-1.76-1.35-1.76-1.11-.76.08-.75.08-.75 1.23.09 1.88 1.27 1.88 1.27 1.09 1.87 2.86 1.33 3.55 1.02.11-.79.43-1.33.78-1.64-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.25-3.22-.13-.3-.54-1.52.12-3.17 0 0 1.02-.33 3.34 1.23A11.64 11.64 0 0112 5.8c1.03.01 2.07.14 3.04.41 2.32-1.56 3.34-1.23 3.34-1.23.66 1.65.25 2.87.12 3.17.78.84 1.25 1.91 1.25 3.22 0 4.61-2.81 5.62-5.48 5.92.44.38.83 1.12.83 2.26v3.35c0 .32.22.69.83.57C20.56 21.79 24 17.29 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<script src="./js/app.js"></script>
+
+</body>
+</html>
