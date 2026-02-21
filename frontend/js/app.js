@@ -1,4 +1,4 @@
-const API = window.__ENV__.API_URL;
+const API = "https://smart-recipe-explorer-uc3r.onrender.com/api/v1";
 
 
 // ===============================
