@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -237,3 +237,7 @@ def ai_suggest(
 @app.get("/health")
 def health():
     return {"status": "healthy"}
+
+@app.head("/health")
+def health_head():
+    return Response(status_code=200)
